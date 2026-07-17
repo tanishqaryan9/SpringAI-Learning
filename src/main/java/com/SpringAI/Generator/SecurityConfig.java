@@ -51,7 +51,7 @@ public class SecurityConfig {
         http.csrf(csrf->csrf.disable());
         http.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
         http.headers(headers->headers.frameOptions(frame->frame.sameOrigin()));
-        http.authorizeHttpRequests(auth->auth.requestMatchers("/signin", "/register", "/signin/**","/register/**", "/oauth2/**", "/login/**", "/error").permitAll().anyRequest().authenticated());
+        http.authorizeHttpRequests(auth->auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll().requestMatchers("/signin", "/register", "/signin/**","/register/**", "/oauth2/**", "/login/**", "/error").permitAll().anyRequest().authenticated());
         http.exceptionHandling(exception->exception.authenticationEntryPoint(authenticationEntryPoint));
         http.oauth2Login(oauth -> oauth
                 .userInfoEndpoint(userInfo -> userInfo
