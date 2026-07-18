@@ -1,5 +1,6 @@
 package com.SpringAI.Generator;
 
+import com.deepgram.DeepgramClient;
 import com.google.genai.Client;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -20,5 +21,17 @@ public class AppConfig {
     public PasswordEncoder passwordEncoder()
     {
         return new BCryptPasswordEncoder();
+    }
+
+    @Value("${deepgram.api.key}")
+    private String apiKey;
+
+
+    @Bean
+    public DeepgramClient deepgramClient() {
+
+        return DeepgramClient.builder()
+                .apiKey(apiKey)
+                .build();
     }
 }

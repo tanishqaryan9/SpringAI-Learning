@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -33,7 +34,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(List.of(frontendUrl, "https://makeshift-blond.vercel.app"));
+        config.setAllowedOrigins(List.of(frontendUrl, "http://localhost:5173", "http://127.0.0.1:5173"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("*"));
         config.setAllowCredentials(true);
@@ -51,7 +52,7 @@ public class SecurityConfig {
         http.csrf(csrf->csrf.disable());
         http.sessionManagement(session->session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED));
         http.headers(headers->headers.frameOptions(frame->frame.sameOrigin()));
-        http.authorizeHttpRequests(auth->auth.requestMatchers("/signin", "/register", "/signin/**","/register/**", "/oauth2/**", "/login/**", "/error").permitAll().anyRequest().authenticated());
+        http.authorizeHttpRequests(auth->auth.requestMatchers(HttpMethod.OPTIONS, "/**").permitAll().requestMatchers("/signin", "/register", "/signin/**","/register/**", "/oauth2/**", "/login/**", "/error").permitAll().anyRequest().authenticated());
         http.exceptionHandling(exception->exception.authenticationEntryPoint(authenticationEntryPoint));
         http.oauth2Login(oauth -> oauth
                 .userInfoEndpoint(userInfo -> userInfo
